@@ -4,57 +4,32 @@ import axios from 'axios';
 
 class SinglePet extends React.Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
-      adopted: false
-    }
-
-    this.deletePet = this.deletePet.bind(this);
+      adopted: false,
+    };
     this.changeStatus = this.changeStatus.bind(this);
   }
 
   changeStatus() {
-    // this.setState({adopted: !this.props.adopted});
-    this.props.onChange(!this.props.adopted); 
+    this.setState((prevState) => ({ adopted: !prevState.adopted }));
   }
-
-  async deletePet(petId) {
-    try {
-      await axios.delete(`/api/pets/${petId}`);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  /*
-  componentDidUpdate(prevProps) { 
-    console.dir(prevProps); 
-    if (this.props.adopted !== prevProps.adopted) {
-      let element = document.getElementById(String(this.props.pet.name));
-      if (element) {
-        if (element.className === 'single-pet') {
-          element.className = 'single-pet adopted';
-        } else {
-          element.className = 'single-pet';
-        }
-      }
-    }
-  }
-  */
-
 
   render() {
+    const { deletePet } = this.props;
+    const { id, name, description, species } = this.props.pet;
+    const { adopted } = this.state;
     return (
-      <div id={this.props.pet.name} className="single-pet">
-        <p>Name: {this.props.pet.name} </p>
-        <p>Description: {this.props.pet.description}</p>
-        <p>Species: {this.props.pet.species}</p>
-      
-        <p>{this.state.adopted ? 'Adopted!' : 'Available'}</p>
+      <div className={`single-pet ${adopted ? 'adopted' : ''}`}>
+        <p>Name: {name}</p>
+        <p>Description: {description}</p>
+        <p>Species: {species}</p>
+        <p>{adopted ? 'Adopted!' : 'Available'}</p>
+
         <button onClick={this.changeStatus}>Toggle Status</button>
-        <DeletePet petId={this.props.pet.id} deletePet={this.deletePet}/>
+        <DeletePet petId={id} deletePet={deletePet} />
       </div>
-    )
+    );
   }
 }
 

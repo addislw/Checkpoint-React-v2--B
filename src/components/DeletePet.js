@@ -1,12 +1,24 @@
 import React from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const DeletePet = (props) => {
-  const deletePet = props.deletePet; 
-  const petId = props.petId; 
+  const { deletePet, petId } = props;
+
+  async function newFunc() {
+    try {
+      await axios.delete(`/api/pets/${petId}`);
+      // deletePet undefined and throwing error
+      deletePet(petId);
+    } catch (error) {
+      console.log('Something went wrong');
+    }
+  }
+
   return (
-    <button onClick={() => deletePet(petId)} className="delete-pet">Delete</button>
-  )
+    <button onClick={newFunc} className="delete-pet">
+      Delete
+    </button>
+  );
 };
 
 export default DeletePet;
